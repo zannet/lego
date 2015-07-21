@@ -1,22 +1,28 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"fmt"
-	"net/http"
 	"os"
-	"runtime"
 )
 
 func main() {
-	http.HandleFunc("/", hello)
-	bind := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
-	fmt.Printf("listening on %s...", bind)
-	err := http.ListenAndServe(bind, nil)
-	if err != nil {
-		panic(err)
-	}
-}
 
-func hello(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(res, "hello, world from %s", runtime.Version())
+	var HOST = os.Getenv("HOST")
+	var PORT = os.Getenv("PORT")
+
+	if (PORT == "") {
+		PORT = "8888"
+	}
+
+	bind := fmt.Sprintf("%s:%s", HOST, PORT)
+	fmt.Printf("listening on %s...", bind)
+
+	r := gin.Default()
+
+    r.GET("/test", func(c *gin.Context) {
+    	c.JSON(200, gin.H{"Pong": "Ping"})
+    })
+
+    r.Run(bind)
 }
