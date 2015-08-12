@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/naikparag/lego/api"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"os"
-	"./api"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 	var HOST = os.Getenv("HOST")
 	var PORT = os.Getenv("PORT")
 
-	if (PORT == "") {
+	if PORT == "" {
 		PORT = "8888"
 	}
 
@@ -26,8 +26,8 @@ func main() {
 		//c.JSON(200, gin.H{"Pong": "Ping"})
 	})
 
-    r.GET("/user", api.GetUser)
-    r.GET("/event", api.GetEvent)
+	r.GET("/user", api.GetUser)
+	r.GET("/event", api.GetEvent)
 
-    r.Run(bind)
+	r.Run(bind)
 }
