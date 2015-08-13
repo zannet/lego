@@ -28,6 +28,7 @@ func main() {
 
     r.GET("/user", api.GetUser)
     r.GET("/event", api.GetEvent)
+    r.GET("/cards", api.GetCards)
 
     r.Run(bind)
 }

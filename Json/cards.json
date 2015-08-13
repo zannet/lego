@@ -1,0 +1,26 @@
+{
+    "cards": [
+        {
+            "data": {
+                "text": "Dreams don't work unless you do",
+                "image_url": "../assets/images/Image_1.png",
+                "author": {
+                    "name": "Amit Kumar",
+                    "message": "We had a great time with the children, teaching and learning about planets.",
+                    "image_url": "../assets/images/Image_3.png"
+                }
+            }
+        },
+        {
+            "data": {
+                "text": "Dreams don't work unless you do",
+                "image_url": "../assets/images/Image_1.png",
+                "author": {
+                    "name": "Amit Kumar",
+                    "message": "We had a great time with the children, teaching and learning about planets.",
+                    "image_url": "../assets/images/Image_3.png"
+                }
+            }
+        }
+    ]
+}

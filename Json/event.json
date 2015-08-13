@@ -1,0 +1,21 @@
+{
+  "id": 101,
+  "title": "Teaching UKG Students",
+  "created_by": "Pooja Bakshi",
+  "created_on": "2015-07-30T09:00:29.239Z",
+  "participants": "8",
+  "volunteers": "14",
+  "time": "2015-07-30T09:00:29.239Z",
+  "duration": "",
+  "location": {
+    "locality": "Powai",
+    "city": "Mumbai",
+    "coordinates": {
+      "latitude": "18.9750° N",
+      "longitude": "72.8258° E"
+    }
+  },
+  "image": {
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/16/HDRI_Sample_Scene_Balls_%28JPEG-HDR%29.jpg"
+  }
+}
