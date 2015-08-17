@@ -16,10 +16,10 @@ func Register(r *gin.Engine) {
 
 	userApi := new(api.User)
 	r.GET("/user", userApi.Get)
+	r.POST("/user", userApi.Post)
 
 	// Event routes
 
 	r.GET("/event", api.GetEvent)
-	r.POST("/event", api.PostEvent)
-	
+	r.POST("/event", api.PostEvent)	
 }
