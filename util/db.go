@@ -4,7 +4,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"github.com/joho/godotenv"
 	"fmt"
-	"os"
+	// "os"
 	"log"
 )
 
@@ -21,13 +21,13 @@ func GetDBSession() *mgo.Session {
 
 	if session != nil {
 		fmt.Printf("DB: reusing same session")
-		return Session
+		return session
 	}
 
-	session, err = mgo.Dial(os.Getenv("MONGO_URL"))
+	session, err = mgo.Dial("localhost:27017")
 
 	if err != nil {
-		panic(err)
+		log.Fatal("Error Connecting Mongo")
 	}
 
 	session.SetMode(mgo.Monotonic, true)

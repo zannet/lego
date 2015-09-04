@@ -14,7 +14,7 @@ type User struct{
 func (this *User) Get(c *gin.Context) {
 
 	s := util.GetDBSession()
-	defer s.Close()
+	
 
 	results := []models.User{}
 
@@ -23,8 +23,9 @@ func (this *User) Get(c *gin.Context) {
 	    fmt.Println("some error ", err)
 	}
 	fmt.Println("Results All: ", results)
-	fmt.Println(util.Glo_variable)
+	// fmt.Println(util.Glo_variable)
 	c.JSON(200, results)
+	defer s.Close()
 }
 
 func (this *User) Post(c *gin.Context) {
