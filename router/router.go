@@ -19,7 +19,8 @@ func Register(r *gin.Engine) {
 	r.POST("/user", userApi.Post)
 
 	// Event routes
-
-	r.GET("/event", api.GetEvent)
-	r.POST("/event", api.PostEvent)	
+	eventApi := new(api.CCEvent)
+	r.GET("/event", eventApi.Get)
+	r.POST("/event", eventApi.Post)	
+	r.DELETE("/event", eventApi.Delete)
 }

@@ -1,7 +1,24 @@
 package models
 
-type Event struct {  
-    ID      int
-    Name    string
-    Type    string
-}
+import (
+	"time"
+	// "labix.org/v2/mgo/bson"
+)
+	// CCEvent contains information for single event.
+
+type CCEvent struct {
+		Id 				string		`json:"id"`
+		Title 			string		`json:"title"`
+		Created_by 		string		`json:"created_by"`
+		Created_on 		time.Time 	`json:"created_on"`
+		Participants 	int 		`json:"participants"`
+		Volunteers 		int 		`json:"volunteers"`
+		Date 			time.Time 	`json:"date"`
+		Duration 		int 		`json:"duration_in_mins"`
+		Location 		string 		`json:"location"`
+		Image 			string 		`json:"image"`
+		
+	}
+
+
+

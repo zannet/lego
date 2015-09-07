@@ -34,7 +34,7 @@ func GetDBSession() *mgo.Session {
 
 	fmt.Printf("DB: creating new db session")
 
-	return session.Clone()
+	return session
 }
 
 
