@@ -7,63 +7,56 @@ import (
 "github.com/naikparag/lego/models"
 "github.com/naikparag/lego/util"
 "gopkg.in/mgo.v2/bson"
-"gopkg.in/mgo.v2"
 )
+type CCEventHandler struct{
+	//dbSession *mgo.Session
+}
 
-func Load(c *gin.Context,session *mgo.Session) models.CCEvent{
+func (this *CCEventHandler)Load() {
+	// Load DB Object
+	fmt.Println("Loads Db")
+	session = util.GetDBSession()
+	dbObj = session.DB(util.DB_Name).C(util.DB_Event)
+}
+
+func (this *CCEventHandler)AddEvent(c *gin.Context)error{
 
 	event := models.CCEvent{}
+	title 			:= c.Query("title")
+	program_id 		:= c.Query("program_id")
+	created_by 		:= c.Query("created_by")
+	participants	:= c.Query("participants")
+	volunteers 		:= c.Query("volunteers")
+	date 			:= c.Query("date")
+	duration 		:= c.Query("duration")
+	location 		:= c.Query("location")
+	image 			:= c.Query("image")
+	layout 			:= "2006-01-02"
+	tm_Date, _ 		:= time.Parse(layout, date)
+	
+	fmt.Println("Data set to variables")
 
-	if c.Query("id") != "" {
-		id := c.Query("id")
-		fmt.Println("Id exist in query ")
-		event = FetchEvent(id,session)
-		fmt.Println("Data fetched")
-	}else{
-		title 			:= c.Query("title")
-		created_by 		:= c.Query("created_by")
-		participants	:= c.Query("participants")
-		volunteers 		:= c.Query("volunteers")
-		date 			:= c.Query("date")
-		duration 		:= c.Query("duration")
-		location 		:= c.Query("location")
-		image 			:= c.Query("image")
-		layout 			:= "2006-01-02"
-		tm_Date, _ 		:= time.Parse(layout, date)
-		// Int variables
-		var duration_Int,participants_int,volunteers_int int
+	id_str := util.GenarateId(16, "number")
 
-		if duration != "" {
-			duration_Int = util.StringToInt(duration)
-		}
-		if participants != "" {
-			participants_int = util.StringToInt(participants)
-		}
-		if volunteers != "" {
-			volunteers_int = util.StringToInt(volunteers)
-		}
+	event = models.CCEvent{Id:id_str,Program_Id:program_id,Title:title,Created_by:created_by,Created_on:time.Now(),Participants:participants,Volunteers:volunteers,Date:tm_Date,Duration:duration,Location:location,Image:image}
+	fmt.Println("Data set to event model")
 
-		fmt.Println("Data set to variables")
+	fmt.Println("Db session open ")
 
-		events := FetchAllEvent(session)
-		var id_str = "1"
-		if len(events) > 0{
-			id_str = util.Increment(len(events))
-		}
+	err := dbObj.Insert(event)
 
-		event = models.CCEvent{Id:id_str,Title:title,Created_by:created_by,Created_on:time.Now(),Participants:participants_int,Volunteers:volunteers_int,Date:tm_Date,Duration:duration_Int,Location:location,Image:image}
-		fmt.Println("Data set to event model")
+	if err != nil {
+		fmt.Println("Data insertion failed ",err.Error())
+		panic(err)
+		return err
 	}
-	return event	
+	
+	return nil	
 }
 
 
-func  FetchEvent(id string,session *mgo.Session)models.CCEvent {
+func  (this *CCEventHandler)FetchEvent(id string)models.CCEvent {
 	fmt.Println("Fetching Particular event - ",id)
-	// Collection Event
-	dbObj := session.DB("lego").C("ccevent")
-
-
 	result := models.CCEvent{}
 	err := dbObj.Find(bson.M{"id": id}).One(&result)
 	if err != nil {
@@ -71,19 +64,29 @@ func  FetchEvent(id string,session *mgo.Session)models.CCEvent {
 	}
 	
 	return result
-
 }
-func  FetchAllEvent(session *mgo.Session)[]models.CCEvent {
+func  (this *CCEventHandler)FetchAllEvent(c *gin.Context)[]models.CCEvent {
 	fmt.Println("Fetching all events - ")
-	// Collection Event
-	dbObj := session.DB("lego").C("ccevent")
-
+	filter := util.ExtractEventFilter(c)
 	results := []models.CCEvent{}
-	err := dbObj.Find(nil).All(&results)
+	err := dbObj.Find(filter).All(&results)
 	if err != nil {
 		fmt.Println("Unable to fetch data - ",err.Error())
 	}
 	
 	return results
-
 }
+func  (this *CCEventHandler)DeleteEvent(c *gin.Context) {
+	fmt.Println("Deleting  events - ")
+	filter := util.ExtractEventFilter(c)
+	err := dbObj.Remove(filter)
+	if err != nil {
+		fmt.Println("Unable to remove data - ",err.Error())
+	}
+}
+
+
+
+
+
+

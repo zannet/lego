@@ -6,19 +6,16 @@ import (
 type (
     // CCProgram contains information for single program.
     CCProgram struct {
-      id              string      `cc:"_id notnull"`
-      creation_date   time.Time   `cc:"creation_date"`
-      title           string      `cc:"title"`
-      thread_name     string      `cc:"thread_name"`
-      volunteers      int         `cc:"volunteers"`
-      genre           string      `cc:"genre"`
-      location        CCLocation  `cc:"location"`
-      image           string      `cc:"image"`
-      description     string      `cc:"description"`
+      Id              string      `cc:"_id notnull"`
+      Creation_date   time.Time   `cc:"creation_date"`
+      Title           string      `cc:"title"`
+      Thread_name     string      `cc:"thread_name"`
+      Volunteers      string         `cc:"volunteers"`
+      Genre           string      `cc:"genre"`
+      Locality        string      `cc:"locality"`
+      City            string      `cc:"city"`
+      Image           string      `cc:"image"`
+      Description     string      `cc:"description"`
     }
-    CCLocation struct{
-      locality        string      `cc:"locality"`
-      city            string      `cc:"city"`
-      coordinates     []float64   `cc:"coordinates"`
-    }
+   
 )

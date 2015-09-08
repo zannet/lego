@@ -34,6 +34,6 @@ func (this *User) Post(c *gin.Context) {
 	s := util.GetDBSession()
 	defer s.Close()
 
-	newUser := models.User{"Tin", "Man"}
+	newUser := models.User{First:"Tin", Last:"Man"}
 	s.DB("lego").C("user").Insert(newUser)
 }
