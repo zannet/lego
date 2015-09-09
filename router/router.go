@@ -13,9 +13,10 @@ func Register(r *gin.Engine) {
 	})
 
 	// User routes
-	userApi := new(api.User)
+	userApi := new(api.CCUser)
 	r.GET("/user", userApi.Get)
 	r.POST("/user", userApi.Post)
+	r.DELETE("/user", userApi.Delete)
 
 	// Event routes
 	eventApi := new(api.CCEvent)

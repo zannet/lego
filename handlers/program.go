@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 	"github.com/gin-gonic/gin"
-	"github.com/naikparag/lego/models"
+	"github.com/naikparag/lego/db_models"
 	"github.com/naikparag/lego/util"
 	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/mgo.v2"
@@ -60,6 +60,7 @@ func (this *CCProgramHandler)AddProgram(c *gin.Context) error{
 
 
 func  (this *CCProgramHandler)FetchProgram(id string)(models.CCProgram,error) {
+	this.Load()
 	fmt.Println("Fetching Particular Program - ",id)
 	result := models.CCProgram{}
 

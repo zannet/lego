@@ -1,12 +1,14 @@
 package handlers
 
 import (
-"fmt"
-"time"
-"github.com/gin-gonic/gin"
-"github.com/naikparag/lego/models"
-"github.com/naikparag/lego/util"
-"gopkg.in/mgo.v2/bson"
+	"fmt"
+	"time"
+	"github.com/gin-gonic/gin"
+	"github.com/naikparag/lego/db_models"
+	"github.com/naikparag/lego/util"
+	"gopkg.in/mgo.v2/bson"
+    "github.com/oleiade/reflections"
+
 )
 type CCEventHandler struct{
 	//dbSession *mgo.Session
@@ -19,8 +21,52 @@ func (this *CCEventHandler)Load() {
 	dbObj = session.DB(util.DB_Name).C(util.DB_Event)
 }
 
-func (this *CCEventHandler)AddEvent(c *gin.Context)error{
+func (this *CCEventHandler)LoadModel(event models.CCEvent)models.Event {
+	fields, _ := reflections.Fields(&models.Event{})
+//new instance
+	eventModel := models.Event{}
 
+	for i := 0; i < len(fields); i++ {
+		has, _ := reflections.HasField(event, fields[i])
+		if has == true {
+			fmt.Println("Field Exist------",fields[i])
+			if fields[i] == "Created_by" {
+				var userObj CCUserHandler
+				var usermodel  models.CCUser
+				value, err := reflections.GetField(event, fields[i])
+
+				if err == nil && value != nil {
+					str, _ := value.(string)
+					usermodel,err = userObj.FetchUser(str)
+					if err == nil  {
+						responseModel := userObj.LoadModel(usermodel)
+						setError := reflections.SetField(&eventModel, fields[i], responseModel)  // err != nil
+						if setError != nil {
+						panic(setError)
+						}
+					}
+				}
+			}else{
+				value, err := reflections.GetField(event, fields[i])
+				if err == nil {
+					fmt.Println("Field Value------",value)
+				setError := reflections.SetField(&eventModel, fields[i], value)  // err != nil
+
+				if setError != nil {
+					panic(setError)
+				}
+			}
+		}
+
+	}
+	
+}
+fmt.Println("Data set to Model --- ", eventModel)
+return eventModel
+}
+
+func (this *CCEventHandler)AddEvent(c *gin.Context)error{
+	this.Load()
 	event := models.CCEvent{}
 	title 			:= c.Query("title")
 	program_id 		:= c.Query("program_id")
@@ -55,17 +101,19 @@ func (this *CCEventHandler)AddEvent(c *gin.Context)error{
 }
 
 
-func  (this *CCEventHandler)FetchEvent(id string)models.CCEvent {
+func  (this *CCEventHandler)FetchEvent(id string)models.Event {
+	this.Load()
 	fmt.Println("Fetching Particular event - ",id)
 	result := models.CCEvent{}
 	err := dbObj.Find(bson.M{"id": id}).One(&result)
 	if err != nil {
 		fmt.Println("Unable to fetch data - ",err.Error())
 	}
-	
-	return result
+	eventModel := this.LoadModel(result)
+	return eventModel
 }
-func  (this *CCEventHandler)FetchAllEvent(c *gin.Context)[]models.CCEvent {
+func  (this *CCEventHandler)FetchAllEvent(c *gin.Context)[]models.Event {
+	this.Load()
 	fmt.Println("Fetching all events - ")
 	filter := util.ExtractEventFilter(c)
 	results := []models.CCEvent{}
@@ -73,10 +121,15 @@ func  (this *CCEventHandler)FetchAllEvent(c *gin.Context)[]models.CCEvent {
 	if err != nil {
 		fmt.Println("Unable to fetch data - ",err.Error())
 	}
-	
-	return results
+	var events []models.Event
+	for i := 0; i < len(results); i++ {
+		eventModel := this.LoadModel(results[i])
+		events = append(events,eventModel)
+	}
+	return events
 }
 func  (this *CCEventHandler)DeleteEvent(c *gin.Context) {
+	this.Load()
 	fmt.Println("Deleting  events - ")
 	filter := util.ExtractEventFilter(c)
 	err := dbObj.Remove(filter)

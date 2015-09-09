@@ -7,7 +7,7 @@ import (
 var filter map[string]string
 func ExtractProgramFilter(c *gin.Context)map[string]string {
 
-	// filter = make(map[string]string)
+	filter = make(map[string]string)
 
 
 	if c.Query("id") != "" {
@@ -44,7 +44,7 @@ func ExtractProgramFilter(c *gin.Context)map[string]string {
 
 func ExtractEventFilter(c *gin.Context)map[string]string {
 
-	// filter = make(map[string]string)
+	filter = make(map[string]string)
 
 
 	if c.Query("id") != "" {
@@ -78,4 +78,25 @@ func ExtractEventFilter(c *gin.Context)map[string]string {
 	fmt.Println("Filter - ", filter)
 	return filter
 
+}
+
+
+func ExtractUserFilter(c *gin.Context)map[string]string {
+	filter = make(map[string]string)
+	if c.Query("id") != "" {
+		filter["id"] = c.Query("id")
+	}
+	if c.Query("firstname") != "" {
+		filter["firstname"] = c.Query("firstname")
+
+	}
+	if c.Query("lastname") != "" {
+		filter["lastname"] = c.Query("lastname")
+	}
+	if c.Query("username") != "" {
+		filter["username"] = c.Query("username")
+	}
+	
+	fmt.Println("Filter - ", filter)
+	return filter
 }

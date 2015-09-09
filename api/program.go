@@ -14,8 +14,8 @@ func (this *CCProgram) Load() {
 	fmt.Println("Program Api loaded: ")
 	if programHandler == nil {
 		programHandler = new(handlers.CCProgramHandler)
-		programHandler.Load()
 	}
+	programHandler.Load()
 }
 func (this *CCProgram) Get(c *gin.Context) {
 	this.Load()

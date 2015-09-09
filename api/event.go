@@ -12,8 +12,8 @@ type CCEvent struct{
 func (this *CCEvent) Load() {
 	if eventHandler == nil {
 		eventHandler = new(handlers.CCEventHandler)
-		eventHandler.Load()
 	}
+	eventHandler.Load()
 }
 func (this *CCEvent) Get(c *gin.Context) {
 	this.Load()
@@ -25,7 +25,17 @@ func (this *CCEvent) Get(c *gin.Context) {
 
 func (this *CCEvent) Post(c *gin.Context) {
 	this.Load()
-	program_id 		:= c.Query("program_id")
+	program_id 	:= c.Query("program_id")
+	user_id 	:= c.Query("created_by")
+
+	if user_id != "" {
+		_,err := userHandler.FetchUser(user_id)
+		if err != nil {
+			fmt.Println("User id not exist: ")
+			panic(err)
+			return
+		}
+	}
 	if program_id != "" {
 		_,err := programHandler.FetchProgram(program_id)
 		if err != nil {

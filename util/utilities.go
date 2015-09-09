@@ -4,6 +4,7 @@ import (
     "fmt"
     "strconv"
     "crypto/rand"
+    "golang.org/x/crypto/bcrypt"
 )
 
 func StringToInt(str string)int {
@@ -52,3 +53,23 @@ func GenarateId(strSize int, randType string) string {
    }
    return string(bytes)
 }
+func Encrypt(str string)string {
+  byteValue := []byte(str)
+
+  // Hashing the password with the cost of 10
+  hashedPassword, err := bcrypt.GenerateFromPassword(byteValue, 10)
+  if err != nil {
+    panic(err)
+  }
+  return string(hashedPassword)
+}
+func Decrypt(hashedPassword  []byte,password string)bool {
+  byteValue := []byte(password)
+    // Comparing the password with the hash
+    err := bcrypt.CompareHashAndPassword(hashedPassword, byteValue)
+    if err == nil {
+      return true
+    }
+    return false
+}
+
